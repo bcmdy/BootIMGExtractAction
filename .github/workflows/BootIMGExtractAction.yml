@@ -6,17 +6,17 @@ on:
       boot:
         description: 'boot'
         required: false
-        default: false
+        default: true
         type: boolean
       init_boot:
         description: 'init_boot'
         required: false
-        default: false
+        default: true
         type: boolean
       rom_url:
         description: 'ROM 下载直链'
         required: true
-        default: 'https://cdnorg.d.miui.com/OS1.0.3.0.UNOCNXM/miui_ZIRCON_OS1.0.3.0.UNOCNXM_e09092107e_14.0.zip'
+        default: 'https://bkt-sgp-miui-ota-update-alisgp.oss-ap-southeast-1.aliyuncs.com/OS1.0.2.0.UKMCNXM/miui_ODIN_OS1.0.2.0.UKMCNXM_af3b0d3530_14.0.zip'
 
 jobs:
   extract_partition:
