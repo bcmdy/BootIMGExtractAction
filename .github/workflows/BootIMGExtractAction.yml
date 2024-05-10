@@ -57,7 +57,7 @@ jobs:
               partitions="$partitions,$2"
             fi
           }
-          if [ ${{ github.event.inputs.imgs }} != "" ]; then
+          if [ "${{ github.event.inputs.imgs }}" != "" ]; then
             partitions="$partitions,${{ github.event.inputs.imgs }}"
           fi
           add_partition "${{ github.event.inputs.boot }}" "boot"
