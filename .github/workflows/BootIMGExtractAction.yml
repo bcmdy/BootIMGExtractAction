@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 检出代码
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       
       - name: 安装依赖
         run: |
@@ -75,7 +75,7 @@ jobs:
           done
 
       - name: 上传镜像及相关信息
-        uses: ncipollo/release-action@v1.12.0
+        uses: ncipollo/release-action@v1.14.0
         with:
             artifacts: "~/output/*"
             bodyfile: "${{ github.workspace }}/info.md"
