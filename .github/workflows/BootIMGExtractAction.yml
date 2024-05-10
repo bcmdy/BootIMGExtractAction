@@ -1,4 +1,4 @@
-name: extract_partition
+name: extract_partition_1
 
 on:
   workflow_dispatch:
@@ -12,6 +12,16 @@ on:
         description: 'init_boot'
         required: false
         default: true
+        type: boolean
+      dtbo:
+        description: 'dtbo'
+        required: false
+        default: false
+        type: boolean
+      vendor:
+        description: 'vendor'
+        required: false
+        default: false
         type: boolean
       rom_url:
         description: 'ROM 下载直链'
@@ -34,6 +44,8 @@ jobs:
           partitions=""
           if [ "${{ github.event.inputs.boot }}" == "true" ]; then partitions="$partitions,boot"; fi
           if [ "${{ github.event.inputs.init_boot }}" == "true" ]; then partitions="$partitions,init_boot"; fi
+          if [ "${{ github.event.inputs.dtbo }}" == "true" ]; then partitions="$partitions,dtbo"; fi
+          if [ "${{ github.event.inputs.vendor }}" == "true" ]; then partitions="$partitions,vendor"; fi
           if [ -z "$partitions" ]; then echo "请选择至少一个分区类型！"; exit 1; fi
           cd ~ && python3 ~/payload-dumper/dumper.py --partitions "${partitions:1}" ${{ github.event.inputs.rom_url }}
 
