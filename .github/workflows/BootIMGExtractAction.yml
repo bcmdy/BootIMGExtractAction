@@ -65,7 +65,7 @@ jobs:
           for img_file in *.img; do
             echo "正在打包压缩: $img_file"
             tar -zcvf "$img_file.tar.gz" "$img_file"
-            echo "$img_file>>$img_file.tar.gz"
+            echo "        >>$img_file.tar.gz"
           done
 
       - name: 上传镜像及相关信息
