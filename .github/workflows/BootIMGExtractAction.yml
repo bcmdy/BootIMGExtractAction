@@ -3,6 +3,10 @@ name: extract_partition
 on:
   workflow_dispatch:
     inputs:
+      rom_url:
+        description: 'ROM 下载直链'
+        required: true
+        default: 'https://bkt-sgp-miui-ota-update-alisgp.oss-ap-southeast-1.aliyuncs.com/OS1.0.2.0.UKMCNXM/miui_ODIN_OS1.0.2.0.UKMCNXM_af3b0d3530_14.0.zip'
       boot:
         description: 'boot'
         required: false
@@ -23,10 +27,10 @@ on:
         required: false
         default: false
         type: boolean
-      rom_url:
-        description: 'ROM 下载直链'
+      imgs:
+        description: '自定义提取镜像, 使用半角","分割'
         required: true
-        default: 'https://bkt-sgp-miui-ota-update-alisgp.oss-ap-southeast-1.aliyuncs.com/OS1.0.2.0.UKMCNXM/miui_ODIN_OS1.0.2.0.UKMCNXM_af3b0d3530_14.0.zip'
+        default: ""
 
 jobs:
   extract_partition:
@@ -52,6 +56,7 @@ jobs:
           if [ "${{ github.event.inputs.init_boot }}" == "true" ]; then partitions="$partitions,init_boot"; fi
           if [ "${{ github.event.inputs.dtbo }}" == "true" ]; then partitions="$partitions,dtbo"; fi
           if [ "${{ github.event.inputs.vendor }}" == "true" ]; then partitions="$partitions,vendor"; fi
+          if [ "${{ github.event.inputs.img }}" != "" ]; then partitions="$partitions,${{ github.event.inputs.imgs }}"; fi
           if [ -z "$partitions" ]; then echo "请选择至少一个分区类型！"; exit 1; fi
           cd ~ && python3 ~/payload-dumper/dumper.py --partitions "${partitions:1}" ${{ github.event.inputs.rom_url }}
 
