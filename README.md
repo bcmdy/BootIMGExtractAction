@@ -11,7 +11,7 @@ English | [简体中文](./README_CN.md)
 ## Usage
 
 1. Fork this repository.
-2. In the Actions tab, select either 'boot' or 'init_boot', and provide the direct download link to your ROM.
+2. In the Actions tab, select the required extracted image such as 'boot', 'init_boot', and provide the direct download link to your ROM.
 3. Click on "Run workflow" and wait for the process to complete.
 
 **If you encounter a "403 Forbidden" error, go to Settings > Actions > General > Workflow permissions and adjust it to "Read and write permissions".**
