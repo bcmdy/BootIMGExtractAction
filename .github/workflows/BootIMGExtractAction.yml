@@ -57,13 +57,11 @@ jobs:
               partitions="$partitions,$2"
             fi
           }
+          partitions="$partitions,${{ github.event.inputs.imgs }}"
           add_partition "${{ github.event.inputs.boot }}" "boot"
           add_partition "${{ github.event.inputs.init_boot }}" "init_boot"
           add_partition "${{ github.event.inputs.dtbo }}" "dtbo"
           add_partition "${{ github.event.inputs.vendor }}" "vendor"
-          if [ "${{ github.event.inputs.imgs }}" != null ]; then
-            partitions="$partitions,${{ github.event.inputs.imgs }}"
-          fi
           if [ -z "$partitions" ]; then
             echo "请选择至少一个分区类型！"
             exit 1
