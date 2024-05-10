@@ -16,11 +16,9 @@
 
 **本项目仅支持 '卡刷包/Recovery ROM'。**
 
-**请去个人仓库内设置-Secret-Action-Add 以 app_token 为 value 'TMP'为名称 填入保存**
-
 ## 其他
 
-特别感谢 [tosasitill](https://github.com/tosasitill) 和 [5ec1cff](https://github.com/5ec1cff)。
+特别感谢 [tosasitill](https://github.com/tosasitill) 和 [5ec1cff](https://github.com/5ec1cff) 和 [armv7a](https://github.com/armv7a)。
 
 本项目依赖于 [payload-dumper](https://github.com/5ec1cff/payload-dumper)。
 
