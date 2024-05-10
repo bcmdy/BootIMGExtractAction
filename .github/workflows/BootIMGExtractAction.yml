@@ -29,7 +29,7 @@ on:
         type: boolean
       imgs:
         description: '自定义提取镜像, 使用半角","分割'
-        required: true
+        required: false
         default: ""
 
 jobs:
@@ -52,12 +52,22 @@ jobs:
       - name: 提取镜像
         run: |
           partitions=""
-          if [ "${{ github.event.inputs.boot }}" == "true" ]; then partitions="$partitions,boot"; fi
-          if [ "${{ github.event.inputs.init_boot }}" == "true" ]; then partitions="$partitions,init_boot"; fi
-          if [ "${{ github.event.inputs.dtbo }}" == "true" ]; then partitions="$partitions,dtbo"; fi
-          if [ "${{ github.event.inputs.vendor }}" == "true" ]; then partitions="$partitions,vendor"; fi
-          if [ "${{ github.event.inputs.img }}" != "" ]; then partitions="$partitions,${{ github.event.inputs.imgs }}"; fi
-          if [ -z "$partitions" ]; then echo "请选择至少一个分区类型！"; exit 1; fi
+          add_partition() {
+            if [ "$1" == "true" ]; then
+              partitions="$partitions,$2"
+            fi
+          }
+          add_partition "${{ github.event.inputs.boot }}" "boot"
+          add_partition "${{ github.event.inputs.init_boot }}" "init_boot"
+          add_partition "${{ github.event.inputs.dtbo }}" "dtbo"
+          add_partition "${{ github.event.inputs.vendor }}" "vendor"
+          if [ "${{ github.event.inputs.imgs }}" != null ]; then
+            partitions="$partitions,${{ github.event.inputs.imgs }}"
+          fi
+          if [ -z "$partitions" ]; then
+            echo "请选择至少一个分区类型！"
+            exit 1
+          fi
           cd ~ && python3 ~/payload-dumper/dumper.py --partitions "${partitions:1}" ${{ github.event.inputs.rom_url }}
 
       - name: 生成信息文件
