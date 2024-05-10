@@ -56,8 +56,16 @@ jobs:
           echo "ROM 下载直链：${{ github.event.inputs.rom_url }}" >> ${{ github.workspace }}/info.md
           echo "提取的镜像大小：" >> ${{ github.workspace }}/info.md
           for img_file in *.img; do
-            tar -zcvf "$img_file.tar.gz" "$img_file"
             echo "$(du -h "$img_file" | awk '{print $1}') $img_file" >> ${{ github.workspace }}/info.md
+          done
+
+      - name: 压缩镜像文件
+        run: |
+          cd ~/output
+          for img_file in *.img; do
+            echo "正在打包压缩: $img_file"
+            tar -zcvf "$img_file.tar.gz" "$img_file"
+            echo "$img_file>>$img_file.tar.gz"
           done
 
       - name: 上传镜像及相关信息
