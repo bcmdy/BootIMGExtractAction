@@ -1,4 +1,4 @@
-name: extract_partition_1
+name: extract_partition
 
 on:
   workflow_dispatch:
