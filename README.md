@@ -18,11 +18,9 @@ English | [简体中文](./README_CN.md)
 
 **This project only supports 'Recovery ROM'.**
 
-**To ensure functionality, add a secret named 'app_token' in your personal repository's Settings > Secrets > Actions. Set its value to 'TMP'.**
-
 ## Others
 
-Special thanks to [tosasitill](https://github.com/tosasitill) and [5ec1cff](https://github.com/5ec1cff).
+Special thanks to [tosasitill](https://github.com/tosasitill) and [5ec1cff](https://github.com/5ec1cff) and [armv7a](https://github.com/armv7a).
 
 This project relies on [payload-dumper](https://github.com/5ec1cff/payload-dumper).
 
