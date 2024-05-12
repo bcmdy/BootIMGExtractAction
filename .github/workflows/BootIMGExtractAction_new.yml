@@ -49,8 +49,7 @@ jobs:
 
       - name: 安装依赖
         run: |
-          git clone --single-branch --depth=1 https://github.com/5ec1cff/payload-dumper
-          cd payload-dumper && pip3 install -r requirement.txt
+          pip install git+https://github.com/5ec1cff/payload-dumper
 
       - name: 提取镜像
         run: |
@@ -65,7 +64,7 @@ jobs:
             exit 1
           fi
           partitions_string=$(IFS=, ; echo "${partitions[*]}")
-          python3 ${{ github.workspace }}/payload-dumper/payload_dumper/dumper.py --partitions $partitions_string ${{ github.event.inputs.rom_url }}
+          payload_dumper --partitions $partitions_string ${{ github.event.inputs.rom_url }}
 
       - name: 生成信息
         run: |
