@@ -1,0 +1,88 @@
+name: extract_partition_V2.0
+
+on:
+  workflow_dispatch:
+    inputs:
+      rom_url:
+        description: 'ROM 下载直链'
+        required: true
+        default: 'https://bkt-sgp-miui-ota-update-alisgp.oss-ap-southeast-1.aliyuncs.com/OS1.0.2.0.UKMCNXM/miui_ODIN_OS1.0.2.0.UKMCNXM_af3b0d3530_14.0.zip'
+      imgs:
+        description: '自定义提取镜像, 使用半角","分割'
+        required: false
+        default: ""
+      boot:
+        description: 'boot'
+        required: false
+        default: true
+        type: boolean
+      init_boot:
+        description: 'init_boot'
+        required: false
+        default: true
+        type: boolean
+      dtbo:
+        description: 'dtbo'
+        required: false
+        default: false
+        type: boolean
+      vendor:
+        description: 'vendor'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  extract_partition:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4.1.4
+
+      - name: 安装依赖
+        run: |
+          python -V
+          pip install git+https://github.com/5ec1cff/payload-dumper
+
+      - name: 提取镜像
+        run: |
+          partitions=()
+          [[ "${{ github.event.inputs.imgs }}" != "" ]] && partitions+=("${{ github.event.inputs.imgs }}")
+          [[ "${{ github.event.inputs.boot }}" == "true" ]] && partitions+=("boot")
+          [[ "${{ github.event.inputs.init_boot }}" == "true" ]] && partitions+=("init_boot")
+          [[ "${{ github.event.inputs.dtbo }}" == "true" ]] && partitions+=("dtbo")
+          [[ "${{ github.event.inputs.vendor }}" == "true" ]] && partitions+=("vendor")
+          if [ ${#partitions[@]} -eq 0 ]; then 
+            echo "请选择至少一个分区类型！"
+            exit 1
+          fi
+          partitions_string=$(IFS=, ; echo "${partitions[*]}")
+          payload_dumper --partitions $partitions_string ${{ github.event.inputs.rom_url }}
+
+      - name: 生成信息
+        run: |
+          cd ${{ github.workspace }}/output
+          echo "BUILD_TIME=$(TZ=Asia/Shanghai date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
+          echo "提交日期：$(TZ=Asia/Shanghai date '+%Y-%m-%d %H:%M:%S')" >> ${{ github.workspace }}/info.md
+          echo "ROM 下载直链：${{ github.event.inputs.rom_url }}" >> ${{ github.workspace }}/info.md
+          echo "镜像大小：" >> ${{ github.workspace }}/info.md
+          for img_file in *.img; do
+            echo "$(du -h "$img_file" | cut -f1) $img_file" >> ${{ github.workspace }}/info.md
+          done
+
+      - name: 压缩镜像文件
+        run: |
+          cd ${{ github.workspace }}/output
+          for img_file in *.img; do
+            echo "正在打包压缩: $img_file"
+            tar -zcvf "$img_file.tar.gz" "$img_file"
+            echo "        >>$img_file.tar.gz"
+          done
+
+      - name: 上传镜像及相关信息
+        uses: ncipollo/release-action@v1.14.0
+        with:
+            artifacts: "${{ github.workspace }}/output/*"
+            bodyfile: "${{ github.workspace }}/info.md"
+            tag: "OUTPUT_${{ env.BUILD_TIME }}_${{ github.run_id }}"
+            token: ${{ secrets.GITHUB_TOKEN }}
