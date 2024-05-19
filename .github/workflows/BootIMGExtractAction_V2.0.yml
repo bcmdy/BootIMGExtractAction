@@ -47,7 +47,6 @@ jobs:
 
       - name: 安装依赖
         run: |
-          python -V
           pip install git+https://github.com/5ec1cff/payload-dumper
 
       - name: 提取镜像
