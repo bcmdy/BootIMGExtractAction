@@ -28,9 +28,9 @@ jobs:
 
       - name: Delete old releases
         if: steps.get_latest_release.outputs.result != ''
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKENS }}
         run: |
           git fetch --tags
           # Assuming you want to keep the latest 1 tags for example
           git tag --sort=-creatordate | head -n -1 | xargs -d '\n' git tag -d
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKENS }}
