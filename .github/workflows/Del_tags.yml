@@ -1,35 +1,36 @@
 name: Delete old releases tags
- 
+
 on:
   workflow_dispatch:
-#   schedule:
-#     - cron: '0 0 * * *' # 每天午夜运行
- 
+    # schedule:
+    #   - cron: '0 0 * * *' # Uncomment to run daily at midnight
+
 jobs:
   delete_old_releases:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          ref: 'refs/tags'
- 
+
       - name: Get latest release tag
         id: get_latest_release
         uses: actions/github-script@v5
         with:
           script: |
-            const tags = await github.rest.repos.listTags({
+            const { data: tags } = await github.rest.repos.listTags({
               owner: context.repo.owner,
               repo: context.repo.repo
             });
-            const latestTag = tags.data[0];
-            console.log(`Latest release tag: ${latestTag.name}`);
-            return latestTag.name;
+            // Assuming the latest tag is the first one alphabetically
+            const latestTag = tags[0].name;
+            console.log(`Latest release tag: ${latestTag}`);
+            return latestTag;
+
       - name: Delete old releases
-        if: steps.get_latest_release.outputs.tag_name != ''
+        if: steps.get_latest_release.outputs.result != ''
         run: |
           git fetch --tags
-          git tag -l 'OUTPUT*' | sort -V | head -n -1 | xargs git tag -d
+          # Assuming you want to keep the latest 1 tags for example
+          git tag --sort=-creatordate | head -n -1 | xargs -d '\n' git tag -d
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
