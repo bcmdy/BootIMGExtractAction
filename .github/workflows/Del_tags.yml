@@ -33,4 +33,4 @@ jobs:
           # Assuming you want to keep the latest 1 tags for example
           git tag --sort=-creatordate | head -n -1 | xargs -d '\n' git tag -d
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKENS }}
