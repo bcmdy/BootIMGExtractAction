@@ -40,6 +40,8 @@ on:
 jobs:
   extract_partition:
     runs-on: ubuntu-latest
+    env:
+      BUILD_TIME:
     steps:
       - name: 检出代码
         uses: actions/checkout@v4
