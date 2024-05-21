@@ -94,6 +94,6 @@ jobs:
         uses: ncipollo/release-action@v1.14.0
         with:
             artifacts: "${{ github.workspace }}/output/*"
-            bodyfile: "${{ github.workspace }}/info.md"
+            bodyFile: "${{ github.workspace }}/info.md"
             tag: "OUTPUT_${{ env.BUILD_TIME }}_${{ github.run_id }}"
             token: ${{ secrets.GITHUB_TOKEN }}
