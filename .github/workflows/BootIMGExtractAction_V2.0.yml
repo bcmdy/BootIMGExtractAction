@@ -31,6 +31,11 @@ on:
         required: false
         default: false
         type: boolean
+      vendor_boot:
+        description: 'vendor_boot'
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   extract_partition:
@@ -57,6 +62,7 @@ jobs:
           [[ "${{ github.event.inputs.init_boot }}" == "true" ]] && partitions+=("init_boot")
           [[ "${{ github.event.inputs.dtbo }}" == "true" ]] && partitions+=("dtbo")
           [[ "${{ github.event.inputs.vendor }}" == "true" ]] && partitions+=("vendor")
+          [[ "${{ github.event.inputs.vendor_boot }}" == "true" ]] && partitions+=("vendor_boot")
           if [ ${#partitions[@]} -eq 0 ]; then 
             echo "请选择至少一个分区类型！"
             exit 1
