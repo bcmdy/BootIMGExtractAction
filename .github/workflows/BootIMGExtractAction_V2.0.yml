@@ -76,7 +76,7 @@ jobs:
         run: |
           cd ${{ github.workspace }}/output
           echo "BUILD_TIME=$(TZ=Asia/Shanghai date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
-          echo "提交日期：$(TZ=Asia/Shanghai date '+%Y-%m-%d %H:%M:%S')" >> ${{ github.workspace }}/info.md
+          echo "提交时间：$(TZ=Asia/Shanghai date '+%Y-%m-%d %H:%M:%S')" >> ${{ github.workspace }}/info.md
           echo "ROM 下载直链：${{ github.event.inputs.rom_url }}" >> ${{ github.workspace }}/info.md
           echo "镜像大小：" >> ${{ github.workspace }}/info.md
           for img_file in *.img; do

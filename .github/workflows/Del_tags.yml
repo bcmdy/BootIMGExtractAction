@@ -1,0 +1,35 @@
+name: Delete old releases tags
+ 
+on:
+  workflow_dispatch:
+#   schedule:
+#     - cron: '0 0 * * *' # 每天午夜运行
+ 
+jobs:
+  delete_old_releases:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          ref: 'refs/tags'
+ 
+      - name: Get latest release tag
+        id: get_latest_release
+        uses: actions/github-script@v5
+        with:
+          script: |
+            const tags = await github.rest.repos.listTags({
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            });
+            const latestTag = tags.data[0];
+            console.log(`Latest release tag: ${latestTag.name}`);
+            return latestTag.name;
+      - name: Delete old releases
+        if: steps.get_latest_release.outputs.tag_name != ''
+        run: |
+          git fetch --tags
+          git tag -l 'OUTPUT*' | sort -V | head -n -1 | xargs git tag -d
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
